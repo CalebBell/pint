@@ -144,6 +144,16 @@ class _Unit(SharedRegistryObject):
 
         return self._REGISTRY.get_compatible_units(self)
 
+    def __call__(self, other):
+        t = type(other)
+        if t == self._REGISTRY.Quantity:
+            return other.to(self)
+        elif t == str:
+            return self._REGISTRY.parse_expression(other).to(self)
+        else:
+            return self.__mul__(other)
+
+
     def __mul__(self, other):
         if self._check(other):
             if isinstance(other, self.__class__):
